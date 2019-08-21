@@ -1,4 +1,4 @@
-package demo;
+package src.main.java.demo;
 
 /**
  * @author 凌浩,

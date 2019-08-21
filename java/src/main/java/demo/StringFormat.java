@@ -1,5 +1,4 @@
-package demo;
-
+package src.main.java.demo;
 /**
  * @author 凌浩,
  * @date 2019/8/19,

@@ -1,5 +1,4 @@
-package demo;
-
+package src.main.java.demo;
 import java.io.Serializable;
 
 /**

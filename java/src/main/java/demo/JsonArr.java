@@ -1,4 +1,4 @@
-package demo;
+package src.main.java.demo;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
