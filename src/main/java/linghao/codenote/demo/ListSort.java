@@ -1,4 +1,4 @@
-package demo;
+package linghao.codenote.demo;
 
 import java.util.ArrayList;
 import java.util.Comparator;

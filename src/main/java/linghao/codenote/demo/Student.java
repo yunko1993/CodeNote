@@ -1,4 +1,4 @@
-package demo;
+package linghao.codenote.demo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

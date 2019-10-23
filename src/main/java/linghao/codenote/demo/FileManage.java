@@ -1,4 +1,4 @@
-package demo;
+package linghao.codenote.demo;
 
 import java.io.BufferedWriter;
 import java.io.File;

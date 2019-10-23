@@ -1,4 +1,4 @@
-package src.main.java.demo;
+package linghao.codenote.demo;
 /**
  * @author 凌浩,
  * @date 2019/8/19,

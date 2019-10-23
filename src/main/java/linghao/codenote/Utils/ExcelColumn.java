@@ -1,4 +1,4 @@
-package Utils;
+package linghao.codenote.Utils;
 
 import java.lang.annotation.*;
 
