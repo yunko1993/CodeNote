@@ -1,0 +1,89 @@
+# server
+server:
+  port: 8090
+  session-timeout: 28800
+  servlet.context-path: /CodeNote
+  tomcat:
+    uri-encoding: UTF-8
+    useBodyEncodingForURI: true
+# datasource
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    lettuce:
+      pool:
+        max-active: 32
+        max-wait: 300ms
+        max-idle: 16
+        min-idle: 8
+
+  messages:
+    encoding: UTF-8
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  datasource:
+    center:
+      type: com.alibaba.druid.pool.DruidDataSource
+      jdbc-url: jdbc:mysql://139.198.14.119:3366/expressway?useSSL=false&useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useOldAliasMetadataBehavior=true&autoReconnect=true
+      username: superadmin
+      password: superadmin123
+      driver-class-name: com.mysql.jdbc.Driver
+#    donggang:
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      jdbc-url: jdbc:mysql://139.198.122.141:3306/expressway?useSSL=false&useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useOldAliasMetadataBehavior=true&autoReconnect=true
+#      username: linuxmanage
+#      password: 3er4#ER$
+#      driver-class-name: com.mysql.jdbc.Driver
+#    yangjian:
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      jdbc-url: jdbc:mysql://139.198.14.119:3366/expressway3?useSSL=false&useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useOldAliasMetadataBehavior=true&autoReconnect=true
+#      username: superadmin
+#      password: superadmin123
+#      driver-class-name: com.mysql.jdbc.Driver
+
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+
+# mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    call-setters-on-nulls: true
+  type-aliases-package: linghao.codenote.demo.bean
+
+# quartz
+quartz:
+   enabled: false
+
+# log
+logging:
+  level:
+    org:
+      springframework: WARN
+    cn.jssgx.tollcollection.reporttransfer.dao: DEBUG
+  file: logs/tollcollection.log
+
+
+
+
+
+
+
+
+

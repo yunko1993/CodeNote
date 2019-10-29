@@ -364,7 +364,7 @@ public final class ExcelUtils {
          */
         workbook.getSheetAt(Constant.FIRST_SHEET).createFreezePane(0, 1, 0, 1);
 
-        String finalName = StringUtils.isBlank(targetFileName) ? Constant.FILE_NAME_DEFAULT : targetFileName;
+        String finalName = StringUtils.isBlank(targetFileName) ? Constant.FILE_NAME_DEFAULT : targetFileName+".xlsx";
         buildExcelDocument(finalName, workbook, response);
 //        buildExcelFile("D:\\test.xlsx", workbook);
     }
