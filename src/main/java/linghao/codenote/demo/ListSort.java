@@ -19,7 +19,7 @@ public class ListSort {
         students.add(new Student("cde", 17));
         students.add(new Student("efg", 15));
         students.add(new Student("def", 25));
-        students.sort(Comparator.comparing(Student::getName));
+        students.sort(Comparator.comparing(Student::getAge));
         for (Student stu : students) {
             System.out.println(stu);
         }
