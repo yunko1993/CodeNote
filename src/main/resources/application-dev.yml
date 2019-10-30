@@ -58,8 +58,29 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
-
-
+# freemarker
+  freemarker:
+    allow-request-override: false
+    allow-session-override: false
+    cache: true
+    charset: UTF-8
+    check-template-location: true
+    content-type: application/json; charset=utf-8
+    enabled: true
+    expose-request-attributes: true
+    expose-session-attributes: true
+    expose-spring-macro-helpers: true
+    request-context-attribute: request
+    prefer-file-system-access: true
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+#    settings:
+#      emplate_update_delay: 0
+#      default_encoding: UTF-8
+#      number_format: 0.##########
+#      datetime_format: yyyy-MM-dd HH:mm:ss
+#      classic_compatible: true
+#      template_exception_handler: ignore
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*/*.xml
