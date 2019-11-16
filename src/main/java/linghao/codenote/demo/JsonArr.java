@@ -23,6 +23,7 @@ public class JsonArr {
         for (int i = 0; i < params.size(); i++) {
             String info = params.getString(i);
             JSONObject pam = JSONObject.fromObject(info);
+
             String imageId = pam.getString("imageId");
           //  String productId = pam.getString("productID");
             System.out.println( "imageId为---" + imageId);
