@@ -1,26 +1,26 @@
 package linghao.codenote.Utils;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -36,8 +36,17 @@ import java.util.stream.Stream;
  * @time 11:45,
  */
 @Slf4j
+@Component
 public final class ExcelUtils {
-    private static final Logger log = LoggerFactory.getLogger(ExcelUtils.class);
+
+
+    private static Configuration freemarkerConf;
+
+
+    @Resource
+    public void setFreemarkerConf(Configuration freemarkerConf) {
+        ExcelUtils.freemarkerConf = freemarkerConf;
+    }
 
     /**
      * 常用的Excel文件格式
@@ -70,11 +79,14 @@ public final class ExcelUtils {
     }
 
     /**
-     * 读取Excel并解析为对象模型，
-     * 主要通过WEB上传的MultipartFile格式机型解析
-     * @param cls 对象模板的声明模板
-     * @param file WEB传输的模板
-     * @param <T> 对象模板的声明模板的泛型声明
+     * 读取Excel并解析为对象模型， 主要通过WEB上传的MultipartFile格式机型解析
+     *
+     * @param cls
+     *            对象模板的声明模板
+     * @param file
+     *            WEB传输的模板
+     * @param <T>
+     *            对象模板的声明模板的泛型声明
      * @return T的对象集合
      */
     public static <T> List<T> readExcel(Class<T> cls, MultipartFile file) {
@@ -102,12 +114,13 @@ public final class ExcelUtils {
 
             if (null != workbook) {
                 /**
-                 * 声明列名与T中注解ExcelColumn的属性组成映射关系，因可能存在对Field对应一列，故Key-Value使用String, List<Field>格式
+                 * 声明列名与T中注解ExcelColumn的属性组成映射关系，因可能存在对Field对应一列，故Key-Value使用String,
+                 * List<Field>格式
                  */
                 Map<String, List<Field>> classMap = new HashMap<>(32);
                 List<Field> fields = Stream.of(cls.getDeclaredFields()).collect(Collectors.toList());
                 fields.forEach(field -> {
-                    ExcelColumn  annotation = field.getAnnotation(ExcelColumn.class);
+                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
 
                     if (null != annotation) {
                         String value = annotation.value();
@@ -164,11 +177,12 @@ public final class ExcelUtils {
 
                                     List<Field> fieldList = reflectionMap.get(k);
 
-                                    fieldList.forEach( field -> {
+                                    fieldList.forEach(field -> {
                                         try {
                                             handleField(t, cellValue, field);
                                         } catch (Exception e) {
-                                            log.error("reflect field:{} -> value:{} exception", field.getName(), cellValue);
+                                            log.error("reflect field:{} -> value:{} exception", field.getName(),
+                                                    cellValue);
                                             log.error(e.toString(), e);
                                         }
                                     });
@@ -204,7 +218,9 @@ public final class ExcelUtils {
 
     /**
      * 获取单元格的属性值，转为String输出
-     * @param cell 单元格
+     *
+     * @param cell
+     *            单元格
      * @return 单元格属性值的字符串形式
      */
     private static String getCellValue(Cell cell) {
@@ -236,11 +252,17 @@ public final class ExcelUtils {
 
     /**
      * 设置T的FieldList中指定的值
-     * @param t 上下文涉及的T的实际对象
-     * @param value 单元格属性
-     * @param field 对象的成员属性对象类
-     * @param <T> 上下文涉及的T类声明
-     * @throws Exception 异常信息
+     *
+     * @param t
+     *            上下文涉及的T的实际对象
+     * @param value
+     *            单元格属性
+     * @param field
+     *            对象的成员属性对象类
+     * @param <T>
+     *            上下文涉及的T类声明
+     * @throws Exception
+     *             异常信息
      */
     private static <T> void handleField(T t, String value, Field field) throws Exception {
         Class<?> type = field.getType();
@@ -285,33 +307,37 @@ public final class ExcelUtils {
 
     /**
      * 生成Excel的方法，适用于单Sheet页的形成，多Sheet暂不涉及
-     * @param response 响应体
-     * @param datas 数据集
-     * @param targetFileName 拟形成文件的文件名
-     * @param targetSheetName 第一个页签的名称，不指定时使用默认值
-     * @param cls T的模板类
-     * @param <T> T的模板
+     *
+     * @param response
+     *            响应体
+     * @param datas
+     *            数据集
+     * @param targetFileName
+     *            拟形成文件的文件名
+     * @param targetSheetName
+     *            第一个页签的名称，不指定时使用默认值
+     * @param cls
+     *            T的模板类
+     * @param <T>
+     *            T的模板
      */
-    public static <T> void writeExcel(HttpServletResponse response,
-                                      String targetFileName,
-                                      String targetSheetName,
+    @SuppressWarnings("unused")
+    public static <T> void writeExcel(HttpServletResponse response, String targetFileName, String targetSheetName,
                                       List<T> datas, Class<T> cls) {
         Field[] fields = cls.getDeclaredFields();
-        List<Field> fieldList = Arrays.stream(fields)
-                .filter(field -> {
-                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
+        List<Field> fieldList = Arrays.stream(fields).filter(field -> {
+            ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
 
-                    if (null != annotation && annotation.col() > 0) {
-                        field.setAccessible(true);
-                        return true;
-                    }
-                    return  false;
-                })
-                .sorted(Comparator.comparing(var -> var.getAnnotation(ExcelColumn.class).col()))
-                .collect(Collectors.toList());
+            if (null != annotation && annotation.col() > 0) {
+                field.setAccessible(true);
+                return true;
+            }
+            return false;
+        }).sorted(Comparator.comparing(var -> var.getAnnotation(ExcelColumn.class).col())).collect(Collectors.toList());
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(StringUtils.isBlank(targetSheetName) ? Constant.SHEET_NAME_DEFAULT : targetSheetName);
+        Sheet sheet = workbook
+                .createSheet(StringUtils.isBlank(targetSheetName) ? Constant.SHEET_NAME_DEFAULT : targetSheetName);
         AtomicInteger aRow = new AtomicInteger();
 
         /**
@@ -359,21 +385,24 @@ public final class ExcelUtils {
             });
         }
         /**
-         * 冻结窗体
-         * 即第一行和第一列
+         * 冻结窗体 即第一行和第一列
          */
         workbook.getSheetAt(Constant.FIRST_SHEET).createFreezePane(0, 1, 0, 1);
 
-        String finalName = StringUtils.isBlank(targetFileName) ? Constant.FILE_NAME_DEFAULT : targetFileName+".xlsx";
+        String finalName = StringUtils.isBlank(targetFileName) ? Constant.FILE_NAME_DEFAULT : targetFileName + ".xlsx";
         buildExcelDocument(finalName, workbook, response);
-//        buildExcelFile("D:\\test.xlsx", workbook);
+        // buildExcelFile("D:\\test.xlsx", workbook);
     }
 
     /**
      * 不生成文件而通过浏览器下载Excel文件
-     * @param fileName 下载后的文件名称
-     * @param workbook Excel的工作簿
-     * @param response WEB请求的响应体对象
+     *
+     * @param fileName
+     *            下载后的文件名称
+     * @param workbook
+     *            Excel的工作簿
+     * @param response
+     *            WEB请求的响应体对象
      */
     private static void buildExcelDocument(String fileName, Workbook workbook, HttpServletResponse response) {
         try {
@@ -388,10 +417,14 @@ public final class ExcelUtils {
 
     /**
      * 生成Excelwe年
-     * @param path 文件的全路径
-     * @param workbook Excel的工作簿
+     *
+     * @param path
+     *            文件的全路径
+     * @param workbook
+     *            Excel的工作簿
      */
-    private static  void buildExcelFile(String path, Workbook workbook) {
+    @SuppressWarnings("unused")
+    private static void buildExcelFile(String path, Workbook workbook) {
         File file = new File(path);
 
         if (file.exists()) {
@@ -407,7 +440,9 @@ public final class ExcelUtils {
 
     /**
      * 随机整数num，获取大于num的最小的2的倍数
-     * @param num 随机整数
+     *
+     * @param num
+     *            随机整数
      * @return rebuild
      */
     private static int rebuildNumber(int num) {
@@ -418,5 +453,59 @@ public final class ExcelUtils {
         num |= num >>> 8;
         num |= num >>> 16;
         return num < 0 ? 1 : (num >= max ? max : num + 1);
+    }
+
+    /**
+     *功能描述 freemarker模板导出
+     * @author linghao
+     * @date 2019/12/12
+     * @time 2:15 下午
+     * @params [response, root, fileName, ftlName]
+     * @return void
+     */
+    public static void ftlExport(HttpServletResponse response,Map<String,Object> root,String fileName,String ftlName)throws IOException, TemplateException {
+        Template template;
+        template=freemarkerConf.getTemplate(ftlName);
+        //获取系统所在目录
+        String userDir = System.getProperties().getProperty("user.dir");
+        userDir = userDir + File.separator + fileName;
+        File show = new File(userDir);
+        show.setWritable(true,false);
+        Writer out = new OutputStreamWriter(new FileOutputStream(show), "UTF-8");
+        //渲染
+        template.process(root, out);
+        out.close();
+        download(userDir,response,fileName);
+        show.delete();
+    }
+
+
+    /**
+     *功能描述 下载
+     * @author linghao
+     * @date 2019/12/11
+     * @time 9:28 下午
+     * @params [filePath, response, fname]
+     * @return void
+     */
+    public static void download(String filePath, HttpServletResponse response, String fname) throws IOException {
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Pragma", "No-Cache");
+        response.setHeader("Cache-Control", "No-Cache");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("application/msexcel; charset=UTF-8");
+        response.setHeader("Content-disposition","attachment; filename=" + URLEncoder.encode(fname, "UTF-8"));// 设定输出文件头
+        ServletOutputStream out = null;
+        FileInputStream in = new FileInputStream(filePath); // 读入文件
+        out = response.getOutputStream();
+        out.flush();
+        int aRead = 0;
+        while ((aRead = in.read()) != -1 & in != null) {
+            out.write(aRead);
+        }
+        out.flush();
+        in.close();
+        out.close();
+        return;
     }
 }
