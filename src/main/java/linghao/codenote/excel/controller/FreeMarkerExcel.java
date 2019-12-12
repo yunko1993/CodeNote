@@ -32,8 +32,8 @@ public class FreeMarkerExcel {
         students.add(new Student("def", 25));
         Map<String, Object> root = new HashMap<>();
         root.put("list",students);
-        String fileName = "学生导出.xls";
-        ExcelUtils.ftlExport(response,root,fileName,"/freemarker.ftl");
+        String fileName = "学生导出";
+        ExcelUtils.ftlExport(response,root,fileName,"/freemarker");
     }
 
 }

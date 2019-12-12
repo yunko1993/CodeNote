@@ -465,7 +465,7 @@ public final class ExcelUtils {
      */
     public static void ftlExport(HttpServletResponse response,Map<String,Object> root,String fileName,String ftlName)throws IOException, TemplateException {
         Template template;
-        template=freemarkerConf.getTemplate(ftlName);
+        template=freemarkerConf.getTemplate(ftlName+".ftl");
         //获取系统所在目录
         String userDir = System.getProperties().getProperty("user.dir");
         userDir = userDir + File.separator + fileName;
@@ -475,7 +475,7 @@ public final class ExcelUtils {
         //渲染
         template.process(root, out);
         out.close();
-        download(userDir,response,fileName);
+        download(userDir,response,fileName+".xls");
         show.delete();
     }
 
