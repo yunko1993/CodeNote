@@ -1,4 +1,5 @@
 package linghao.codenote.demo;
+
 /**
  * @author 凌浩,
  * @date 2019/8/19,
@@ -9,10 +10,10 @@ public class StringFormat {
         String point = "1";
         Long max = null;
         max = 10027L;
-        String menuNo = max+String.format("%04d",1);
-        Long menuNo2=max+1;
+        String menuNo = max + String.format("%04d", 1);
+        Long menuNo2 = max + 1;
         String munuNo3 = menuNo2.toString();
-      //  System.out.println(menuNo);
+        //  System.out.println(menuNo);
         System.out.println(munuNo3);
     }
 

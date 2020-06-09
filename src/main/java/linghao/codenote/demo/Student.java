@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
-    @ExcelColumn(value = "姓名",col = 1)
+    @ExcelColumn(value = "姓名", col = 1)
     private String name;
-    @ExcelColumn(value = "年龄",col = 2)
+    @ExcelColumn(value = "年龄", col = 2)
     private Integer age;
 }

@@ -1,4 +1,5 @@
 package linghao.codenote.snmp;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -15,6 +16,7 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+
 /**
  * @author 凌浩,
  * @date 2019/11/14,
@@ -40,7 +42,8 @@ public class SnmpSender {
      *
      * @throws IOException
      */
-    public void sendTrap() throws IOException { targetAddress = GenericAddress.parse("udp:127.0.0.1/162");
+    public void sendTrap() throws IOException {
+        targetAddress = GenericAddress.parse("udp:127.0.0.1/162");
         // 设置 target
         CommunityTarget target = new CommunityTarget();
         target.setAddress(targetAddress);
@@ -90,8 +93,8 @@ public class SnmpSender {
     public void doSet() throws IOException {
         // set PDU
         PDU pdu = new PDU();
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 5,
-                0 }), new OctetString("public")));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 5,
+                0}), new OctetString("public")));
         pdu.setType(PDU.SET);
         readResponse(sendPDU(pdu));
     }
@@ -99,18 +102,18 @@ public class SnmpSender {
     public void doGet() throws IOException {
         // get PDU
         PDU pdu = new PDU();
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 1,
-                0 })));
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 2,
-                0 })));
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 3,
-                0 })));
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 4,
-                0 })));
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 5,
-                0 })));
-        pdu.add(new VariableBinding(new OID(new int[] { 1, 3, 6, 1, 2, 1, 1, 6,
-                0 })));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 1,
+                0})));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 2,
+                0})));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 3,
+                0})));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 4,
+                0})));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 5,
+                0})));
+        pdu.add(new VariableBinding(new OID(new int[]{1, 3, 6, 1, 2, 1, 1, 6,
+                0})));
         pdu.setType(PDU.GET);
         readResponse(sendPDU(pdu));
     }
@@ -122,37 +125,35 @@ public class SnmpSender {
                     .getVariableBindings();
             for (int i = 0; i < recVBs.size(); i++) {
                 VariableBinding recVB = recVBs.elementAt(i);
-                log.info("THREAD NUM--"+Thread.currentThread() +  recVB.getOid() + " : " + recVB.getVariable());
+                log.info("THREAD NUM--" + Thread.currentThread() + recVB.getOid() + " : " + recVB.getVariable());
             }
         }
     }
 
 
-
-
-    public void doWork(){
-        for(int i=0;i<1;i++){
-            Thread t  = new Thread(new WorkThread());
+    public void doWork() {
+        for (int i = 0; i < 1; i++) {
+            Thread t = new Thread(new WorkThread());
             t.start();
         }
     }
 
-    class WorkThread implements Runnable{
+    class WorkThread implements Runnable {
 
         @Override
         public void run() {
-            while(!Thread.currentThread().interrupted()){
+            while (!Thread.currentThread().interrupted()) {
                 try {
 //                  doGet();
 //                  doSet();
-                    Thread.sleep(1*1000);
+                    Thread.sleep(1 * 1000);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                    log.error("THREAD NUM--"+Thread.currentThread() + "InterruptedException",e);
+                    log.error("THREAD NUM--" + Thread.currentThread() + "InterruptedException", e);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    log.error("THREAD NUM--"+Thread.currentThread() + "other Exception",e);
+                    log.error("THREAD NUM--" + Thread.currentThread() + "other Exception", e);
                     continue;
                 }
             }
@@ -166,11 +167,11 @@ public class SnmpSender {
         try {
             SnmpSender util = new SnmpSender();
             util.initComm();
-          util.sendTrap();
+            util.sendTrap();
             log.info("---  DO GET --");
-          util.doGet();
+            util.doGet();
             log.info("----do set---");
-          util.doSet();
+            util.doSet();
             util.doWork();
 
 

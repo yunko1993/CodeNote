@@ -19,18 +19,19 @@ import java.util.List;
 @RequestMapping("/poiexcel")
 public class PoiExcel {
     @RequestMapping("/export")
-    public void exprot(HttpServletResponse response){
+    public void exprot(HttpServletResponse response) {
         List<Student> students = new ArrayList<>();
         students.add(new Student("abc", 12));
         students.add(new Student("bcd", 20));
         students.add(new Student("cde", 17));
         students.add(new Student("efg", 15));
         students.add(new Student("def", 25));
-        ExcelUtils.writeExcel(response,"学生表","学生",students,Student.class);
+        ExcelUtils.writeExcel(response, "学生表", "学生", students, Student.class);
     }
+
     @RequestMapping("/import")
-    public List<Student> importExcel(MultipartFile file){
-        return ExcelUtils.readExcel(Student.class,file);
+    public List<Student> importExcel(MultipartFile file) {
+        return ExcelUtils.readExcel(Student.class, file);
     }
 
 }

@@ -7,6 +7,6 @@ package linghao.codenote.demo;
  */
 public class Calculate {
     public static void main(String[] args) {
-        System.out.println(14&4);
+        System.out.println(14 & 4);
     }
 }

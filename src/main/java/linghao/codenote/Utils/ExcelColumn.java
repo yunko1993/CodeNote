@@ -8,14 +8,14 @@ import java.lang.annotation.*;
  * @time 11:45,
  */
 
-    @Target({ElementType.FIELD})
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
-    public @interface ExcelColumn {
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface ExcelColumn {
 
-        String value() default "";
+    String value() default "";
 
-        int col() default 0;
+    int col() default 0;
 
-        String innerSelectPropName() default "";
+    String innerSelectPropName() default "";
 }

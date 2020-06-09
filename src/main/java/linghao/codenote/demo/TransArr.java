@@ -1,5 +1,6 @@
 package linghao.codenote.demo;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,4 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("arr")
 public class TransArr {
 
+    public void test(Class<T> clz) {
+
+    }
 }

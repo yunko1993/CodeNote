@@ -21,30 +21,30 @@ import java.io.IOException;
 @Slf4j
 public class SnmpUtil {
     public static Snmp snmp = null;
-      private static String community = "public";
-      private static String ipAddress = "udp:88.1.10.178/";
+    private static String community = "public";
+    private static String ipAddress = "udp:88.1.10.178/";
 
     public static void initSnmp() throws IOException {
-      //1、初始化多线程消息转发类
+        //1、初始化多线程消息转发类
         MessageDispatcher messageDispatcher = new MessageDispatcherImpl();
-      //其中要增加三种处理模型。如果snmp初始化使用的是Snmp(TransportMapping<? extends Address> transportMapping) ,就不需要增加
-  //      messageDispatcher.addMessageProcessingModel(new MPv1());
-       messageDispatcher.addMessageProcessingModel(new MPv2c());
-       //当要支持snmpV3版本时，需要配置user
+        //其中要增加三种处理模型。如果snmp初始化使用的是Snmp(TransportMapping<? extends Address> transportMapping) ,就不需要增加
+        //      messageDispatcher.addMessageProcessingModel(new MPv1());
+        messageDispatcher.addMessageProcessingModel(new MPv2c());
+        //当要支持snmpV3版本时，需要配置user
         OctetString localEngineID = new OctetString(MPv3.createLocalEngineID());
         USM usm = new USM(SecurityProtocols.getInstance().addDefaultProtocols(), localEngineID, 0);
         UsmUser user = new UsmUser(new OctetString("SNMPV3"), AuthSHA.ID, new OctetString("authPassword"),
                 PrivAES128.ID, new OctetString("privPassword"));
         usm.addUser(user.getSecurityName(), user);
-   //     messageDispatcher.addMessageProcessingModel(new MPv3(usm));
-            //2、创建transportMapping
-   //     UdpAddress updAddr = (UdpAddress) GenericAddress.parse("udp:127.0.0.1/161");
+        //     messageDispatcher.addMessageProcessingModel(new MPv3(usm));
+        //2、创建transportMapping
+        //     UdpAddress updAddr = (UdpAddress) GenericAddress.parse("udp:127.0.0.1/161");
         TransportMapping<?> transportMapping = new DefaultUdpTransportMapping();
-       //3、正式创建snmp
+        //3、正式创建snmp
         snmp = new Snmp(messageDispatcher, transportMapping);
-       //开启监听
+        //开启监听
         snmp.listen();
- }
+    }
 
     private static Target createTarget(int version, int port) {
         Target target = null;
@@ -60,24 +60,24 @@ public class SnmpUtil {
         } else {
             //snmpV1和snmpV2需要指定团体名名称
             target = new CommunityTarget();
-            ((CommunityTarget)target).setCommunity(new OctetString(community));
+            ((CommunityTarget) target).setCommunity(new OctetString(community));
             if (version == SnmpConstants.version2c) {
                 target.setSecurityModel(SecurityModel.SECURITY_MODEL_SNMPv2c);
             }
         }
         target.setVersion(version);
         //必须指定，没有设置就会报错。
-        target.setAddress(GenericAddress.parse(ipAddress+port));
+        target.setAddress(GenericAddress.parse(ipAddress + port));
         target.setRetries(2);
         target.setTimeout(1000);
         return target;
     }
 
-    private static PDU createPDU(int version, int type, String oid){
+    private static PDU createPDU(int version, int type, String oid) {
         PDU pdu = null;
         if (version == SnmpConstants.version3) {
             pdu = new ScopedPDU();
-        }else {
+        } else {
             pdu = new PDUv1();
         }
         pdu.setType(type);
@@ -86,7 +86,7 @@ public class SnmpUtil {
         return pdu;
     }
 
-    public static void snmpGet(String oid){
+    public static void snmpGet(String oid) {
         try {
             //1、初始化snmp,并开启监听
             initSnmp();
@@ -99,8 +99,7 @@ public class SnmpUtil {
             ResponseEvent responseEvent = snmp.send(pdu, target);
             PDU response = responseEvent.getResponse();
             System.out.println("返回结果：" + response);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

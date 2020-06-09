@@ -1,0 +1,36 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#uls {
+    width: 500px;
+    height: 500px;
+    margin: 50px auto;
+}
+
+li {
+    width: 150px;
+    height: 150px;
+    background: skyblue;
+    float: left;
+    list-style: none;
+    margin: 5px;
+    color: #fff;
+    text-align: center;
+    line-height: 150px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#uls li button {
+    width: 50px;
+    height: 30px;
+}
+
+.light {
+    width: 150px;
+    height: 150px;
+    background: #666;
+    color: #fff;
+}

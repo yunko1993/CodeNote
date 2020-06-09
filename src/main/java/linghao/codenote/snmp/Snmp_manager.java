@@ -1,6 +1,7 @@
 package linghao.codenote.snmp;
 
 import java.io.IOException;
+
 import org.snmp4j.*;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
@@ -16,14 +17,14 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 public class Snmp_manager {
     private Snmp snmp = null;
-    private String version=null;
+    private String version = null;
 
     public Snmp_manager(String version) {
-        try{
-            this.version=version;
+        try {
+            this.version = version;
             TransportMapping<?> transport = new DefaultUdpTransportMapping();
             snmp = new Snmp(transport);
-            if(version.equals("3")) {
+            if (version.equals("3")) {
                 //设置安全模式
                 USM usm = new USM(SecurityProtocols.getInstance(), new OctetString(MPv3.createLocalEngineID()), 0);
                 SecurityModels.getInstance().addSecurityModel(usm);
@@ -34,32 +35,33 @@ public class Snmp_manager {
             e.printStackTrace();
         }
     }
+
     /**
      * @param syn  是否是同步模式
-     * @param bro   是否是广播
-     * @param pdu    要发送的报文
-     * @param addr    目标地址
+     * @param bro  是否是广播
+     * @param pdu  要发送的报文
+     * @param addr 目标地址
      * @throws IOException
      */
     public void sendMessage(Boolean syn, final Boolean bro, PDU pdu, String addr) throws IOException {
         //生成目标地址对象
         Address targetAddress = GenericAddress.parse(addr);
-        Target target=null;
-        if(version.equals("3")){
+        Target target = null;
+        if (version.equals("3")) {
             //添加用户
-            snmp.getUSM().addUser(new OctetString("MD5DES"),new UsmUser(new OctetString("MD5DES"), AuthMD5.ID,
-                    new OctetString("MD5DESUserAuthPassword"), PrivDES.ID,new OctetString("MD5DESUserPrivPassword")));
+            snmp.getUSM().addUser(new OctetString("MD5DES"), new UsmUser(new OctetString("MD5DES"), AuthMD5.ID,
+                    new OctetString("MD5DESUserAuthPassword"), PrivDES.ID, new OctetString("MD5DESUserPrivPassword")));
             target = new UserTarget();
             //设置安全级别
-            ((UserTarget)target).setSecurityLevel(SecurityLevel.AUTH_PRIV);
-            ((UserTarget)target).setSecurityName(new OctetString("MD5DES"));
+            ((UserTarget) target).setSecurityLevel(SecurityLevel.AUTH_PRIV);
+            ((UserTarget) target).setSecurityName(new OctetString("MD5DES"));
             target.setVersion(SnmpConstants.version3);
-        }else{
-            target=new CommunityTarget();
-            if(version.equals("1")){
+        } else {
+            target = new CommunityTarget();
+            if (version.equals("1")) {
                 target.setVersion(SnmpConstants.version1);
                 ((CommunityTarget) target).setCommunity(new OctetString("public"));
-            }else{
+            } else {
                 target.setVersion(SnmpConstants.version2c);
                 ((CommunityTarget) target).setCommunity(new OctetString("public"));
             }
@@ -94,12 +96,13 @@ public class Snmp_manager {
             snmp.send(pdu, target, null, listener);
         }
     }
+
     public static void main(String[] args) {
         Snmp_manager manager = new Snmp_manager("2c");
         //构造报文
         PDU pdu = new PDU(); //  PDU pdu = new ScopedPDU();
         //设置要获取的对象ID
-        OID oids=new OID("1.3.6.1.2.1.1.1.0");
+        OID oids = new OID("1.3.6.1.2.1.1.1.0");
         pdu.add(new VariableBinding(oids));
         //设置报文类型
         pdu.setType(PDU.GETNEXT);

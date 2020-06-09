@@ -1,5 +1,7 @@
 package linghao.codenote.demo;
 
+import lombok.var;
+
 /**
  * @author linghao,
  * @date 2019/11/26,
@@ -7,9 +9,9 @@ package linghao.codenote.demo;
  */
 public class Str {
     public static void main(String[] args) {
-        String str ="K211+550（苏皖）";
-        System.out.println(str.split("（").length);
+        String str = "22.11 Gib";
 
+        System.out.println(Float.valueOf(str.substring(0, str.indexOf(" "))));
 
         //        String ss = str.substring(str.length()-1);
 //

@@ -1,4 +1,5 @@
 package linghao.codenote.snmp;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Vector;
@@ -28,12 +29,13 @@ import org.snmp4j.transport.DefaultTcpTransportMapping;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.MultiThreadedMessageDispatcher;
 import org.snmp4j.util.ThreadPool;
+
 /**
  * @author 凌浩,
  * @date 2019/11/14,
  * @time 8:48,
  */
-public class SnmpTrapReceiver implements CommandResponder  {
+public class SnmpTrapReceiver implements CommandResponder {
     private MultiThreadedMessageDispatcher dispatcher;
     private Snmp snmp = null;
     private Address listenAddress;
@@ -82,7 +84,6 @@ public class SnmpTrapReceiver implements CommandResponder  {
      * 实现CommandResponder的processPdu方法, 用于处理传入的请求、PDU等信息 当接收到trap时，会自动进入这个方法
      *
      * @param respEvnt
-     *
      */
     public void processPdu(CommandResponderEvent respEvnt) {
         if (respEvnt != null && respEvnt.getPDU() != null) {

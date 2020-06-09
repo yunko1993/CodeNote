@@ -11,5 +11,8 @@ public class Time {
     public static void main(String[] args) {
 
         System.out.println(new Date());
+
+        System.out.println(new Date(System.currentTimeMillis() + 4 * 1000 * 60 * 60));
+
     }
 }

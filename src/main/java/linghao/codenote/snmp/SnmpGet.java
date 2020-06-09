@@ -20,7 +20,6 @@ public class SnmpGet {
     private static int port = 161;
 
     /**
-     *
      * @param args
      */
     public static void main(String[] args) {

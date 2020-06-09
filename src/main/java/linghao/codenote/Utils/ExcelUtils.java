@@ -81,12 +81,9 @@ public final class ExcelUtils {
     /**
      * 读取Excel并解析为对象模型， 主要通过WEB上传的MultipartFile格式机型解析
      *
-     * @param cls
-     *            对象模板的声明模板
-     * @param file
-     *            WEB传输的模板
-     * @param <T>
-     *            对象模板的声明模板的泛型声明
+     * @param cls  对象模板的声明模板
+     * @param file WEB传输的模板
+     * @param <T>  对象模板的声明模板的泛型声明
      * @return T的对象集合
      */
     public static <T> List<T> readExcel(Class<T> cls, MultipartFile file) {
@@ -219,8 +216,7 @@ public final class ExcelUtils {
     /**
      * 获取单元格的属性值，转为String输出
      *
-     * @param cell
-     *            单元格
+     * @param cell 单元格
      * @return 单元格属性值的字符串形式
      */
     private static String getCellValue(Cell cell) {
@@ -253,16 +249,11 @@ public final class ExcelUtils {
     /**
      * 设置T的FieldList中指定的值
      *
-     * @param t
-     *            上下文涉及的T的实际对象
-     * @param value
-     *            单元格属性
-     * @param field
-     *            对象的成员属性对象类
-     * @param <T>
-     *            上下文涉及的T类声明
-     * @throws Exception
-     *             异常信息
+     * @param t     上下文涉及的T的实际对象
+     * @param value 单元格属性
+     * @param field 对象的成员属性对象类
+     * @param <T>   上下文涉及的T类声明
+     * @throws Exception 异常信息
      */
     private static <T> void handleField(T t, String value, Field field) throws Exception {
         Class<?> type = field.getType();
@@ -308,18 +299,12 @@ public final class ExcelUtils {
     /**
      * 生成Excel的方法，适用于单Sheet页的形成，多Sheet暂不涉及
      *
-     * @param response
-     *            响应体
-     * @param datas
-     *            数据集
-     * @param targetFileName
-     *            拟形成文件的文件名
-     * @param targetSheetName
-     *            第一个页签的名称，不指定时使用默认值
-     * @param cls
-     *            T的模板类
-     * @param <T>
-     *            T的模板
+     * @param response        响应体
+     * @param datas           数据集
+     * @param targetFileName  拟形成文件的文件名
+     * @param targetSheetName 第一个页签的名称，不指定时使用默认值
+     * @param cls             T的模板类
+     * @param <T>             T的模板
      */
     @SuppressWarnings("unused")
     public static <T> void writeExcel(HttpServletResponse response, String targetFileName, String targetSheetName,
@@ -397,12 +382,9 @@ public final class ExcelUtils {
     /**
      * 不生成文件而通过浏览器下载Excel文件
      *
-     * @param fileName
-     *            下载后的文件名称
-     * @param workbook
-     *            Excel的工作簿
-     * @param response
-     *            WEB请求的响应体对象
+     * @param fileName 下载后的文件名称
+     * @param workbook Excel的工作簿
+     * @param response WEB请求的响应体对象
      */
     private static void buildExcelDocument(String fileName, Workbook workbook, HttpServletResponse response) {
         try {
@@ -418,10 +400,8 @@ public final class ExcelUtils {
     /**
      * 生成Excelwe年
      *
-     * @param path
-     *            文件的全路径
-     * @param workbook
-     *            Excel的工作簿
+     * @param path     文件的全路径
+     * @param workbook Excel的工作簿
      */
     @SuppressWarnings("unused")
     private static void buildExcelFile(String path, Workbook workbook) {
@@ -441,8 +421,7 @@ public final class ExcelUtils {
     /**
      * 随机整数num，获取大于num的最小的2的倍数
      *
-     * @param num
-     *            随机整数
+     * @param num 随机整数
      * @return rebuild
      */
     private static int rebuildNumber(int num) {
@@ -456,37 +435,39 @@ public final class ExcelUtils {
     }
 
     /**
-     *功能描述 freemarker模板导出
+     * 功能描述 freemarker模板导出
+     *
+     * @return void
      * @author linghao
      * @date 2019/12/12
      * @time 2:15 下午
      * @params [response, root, fileName, ftlName]
-     * @return void
      */
-    public static void ftlExport(HttpServletResponse response,Map<String,Object> root,String fileName,String ftlName)throws IOException, TemplateException {
+    public static void ftlExport(HttpServletResponse response, Map<String, Object> root, String fileName, String ftlName) throws IOException, TemplateException {
         Template template;
-        template=freemarkerConf.getTemplate(ftlName+".ftl");
+        template = freemarkerConf.getTemplate(ftlName + ".ftl");
         //获取系统所在目录
         String userDir = System.getProperties().getProperty("user.dir");
         userDir = userDir + File.separator + fileName;
         File show = new File(userDir);
-        show.setWritable(true,false);
+        show.setWritable(true, false);
         Writer out = new OutputStreamWriter(new FileOutputStream(show), "UTF-8");
         //渲染
         template.process(root, out);
         out.close();
-        download(userDir,response,fileName+".xls");
+        download(userDir, response, fileName + ".xls");
         show.delete();
     }
 
 
     /**
-     *功能描述 下载
+     * 功能描述 下载
+     *
+     * @return void
      * @author linghao
      * @date 2019/12/11
      * @time 9:28 下午
      * @params [filePath, response, fname]
-     * @return void
      */
     public static void download(String filePath, HttpServletResponse response, String fname) throws IOException {
         response.setCharacterEncoding("utf-8");
@@ -494,7 +475,7 @@ public final class ExcelUtils {
         response.setHeader("Cache-Control", "No-Cache");
         response.setDateHeader("Expires", 0);
         response.setContentType("application/msexcel; charset=UTF-8");
-        response.setHeader("Content-disposition","attachment; filename=" + URLEncoder.encode(fname, "UTF-8"));// 设定输出文件头
+        response.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(fname, "UTF-8"));// 设定输出文件头
         ServletOutputStream out = null;
         FileInputStream in = new FileInputStream(filePath); // 读入文件
         out = response.getOutputStream();

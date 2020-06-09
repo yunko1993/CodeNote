@@ -12,16 +12,16 @@ import java.io.IOException;
  */
 public class FileManage {
     public static void main(String[] args) {
-        File file =new File("D:\\file");
-        if(!file.exists()){
+        File file = new File("D:\\file");
+        if (!file.exists()) {
             file.mkdir();
         }
-        try{//异常处理
+        try {//异常处理
             //如果Qiju_Li文件夹下没有Qiju_Li.txt就会创建该文件
-            BufferedWriter bw=new BufferedWriter(new FileWriter("D:\\file\\11.txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("D:\\file\\11.txt"));
             bw.write("Hello I/O!");//在创建好的文件中写入"Hello I/O"
             bw.close();//一定要关闭文件
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
